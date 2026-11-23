@@ -3,29 +3,32 @@ import Link from 'next/link';
 import './globals.css';
 
 export const metadata = {
-  title: 'Card Checker',
-  description: 'Search Pokémon cards, see prices in rupees and run a quick photo check on your card.',
+  title: 'Circle Card Check',
+  description: 'Circle staff tool: find the exact Pokémon card, grade it, price it in rupees and check it is genuine.',
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body>
-        <header className="site-header">
+        <header className="site-header no-print">
           <div className="container header-inner">
             <Link href="/" className="brand">
               <span className="brand-mark" aria-hidden="true" />
-              Card Checker
+              Circle Card Check
             </Link>
-            <span className="tagline">Pokémon card search · prices in ₹ · photo check</span>
+            <nav className="nav">
+              <Link href="/">Search</Link>
+              <Link href="/history">History</Link>
+            </nav>
           </div>
         </header>
         <main className="container">{children}</main>
-        <footer className="site-footer">
+        <footer className="site-footer no-print">
           <div className="container">
             Card data, pictures and prices come from the free{' '}
             <a href="https://tcgdex.dev" target="_blank" rel="noreferrer">TCGdex</a> database. Exchange rates from
-            Frankfurter. Photo checks are a quick screen, not professional authentication. Not affiliated with
+            Frankfurter. Checks support staff judgement; they are not professional grading. Not affiliated with
             Nintendo, The Pokémon Company, TCGplayer or Cardmarket.
           </div>
         </footer>

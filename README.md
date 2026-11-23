@@ -1,10 +1,12 @@
-# Card Checker
+# Circle Card Check
 
-A small website for Pokémon cards:
+A staff tool for Circle to bring in Pokémon cards: find the exact card, pick the edition, grade the condition, see the price in rupees, check that it's genuine, and keep a record.
 
-1. **Search** a card by name and see the results as a grid of pictures.
-2. **Pick a card** to see what it sells for on TCGplayer (USA) and Cardmarket (Europe), converted to Indian rupees.
-3. **Check your card**: upload a photo, see it next to the official picture, and get a verdict (Looks genuine / Check closely / Likely issue) with reasons.
+1. **Search** by name, by the number printed on the card (`4/102`, `025/165`), name + number (`charizard 4/102`, `pikachu TG05/TG30`), name + set (`umbreon evolving skies`), a set id (`swsh7`) or a card id (`base1-4`). Filter results by era and set. Pokémon TCG Pocket (phone game) cards are left out.
+2. **Edition**: each edition (Unlimited, 1st Edition, Shadowless, Reverse holo…) has its own price, with direct links to the exact TCGplayer and Cardmarket listing.
+3. **Condition**: pick NM / LP / MP / HP / Damaged and see the estimated value. The discounts are in `lib/conditions.js`, so change them there if Circle's real prices differ.
+4. **Photo check** (automatic, in the browser) plus **hands-on checks** (light test, edge layer, card back, font…). Together these give one verdict: *Verified by staff*, *Needs a second check*, *Do not accept* or *Not finished*.
+5. **Save** the check with the staff name, a reference and notes. The **History** page lists saved checks and downloads them as a CSV. Records stay in that browser only.
 
 Everything it uses is free and needs no sign-up or API keys:
 card data and prices from [TCGdex](https://tcgdex.dev), exchange rates from [Frankfurter](https://frankfurter.app) (with ExchangeRate-API as a backup).

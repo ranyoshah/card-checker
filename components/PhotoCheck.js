@@ -9,7 +9,7 @@ import { prepareImage } from '../lib/imageLoader';
 const ICONS = { pass: '✓', warn: '!', fail: '✕', info: 'i' };
 const STATUS_WORDS = { pass: 'OK', warn: 'Look closer', fail: 'Red flag', info: 'Skipped' };
 
-export default function PhotoCheck({ officialImage, cardName }) {
+export default function PhotoCheck({ officialImage, cardName, onResult }) {
   const [photoUrl, setPhotoUrl] = useState(null);
   const [result, setResult] = useState(null);
   const [busy, setBusy] = useState(false);
@@ -39,7 +39,9 @@ export default function PhotoCheck({ officialImage, cardName }) {
     setBusy(true);
     try {
       const [mine, official] = await Promise.all([prepareImage(url), prepareImage(officialSrc)]);
-      setResult(analyseCardPhoto(mine, official));
+      const r = analyseCardPhoto(mine, official);
+      setResult(r);
+      if (onResult) onResult(r);
     } catch {
       setError("Couldn't read one of the pictures. Try a JPG or PNG photo, or reload the page.");
     } finally {
@@ -49,16 +51,16 @@ export default function PhotoCheck({ officialImage, cardName }) {
 
   return (
     <section className="checker">
-      <h2>Check your card</h2>
+      <h2>Step 3 · Photo check (automatic)</h2>
       <p>
-        Take a photo of your {cardName} and compare it with the official picture. For the best result: lay the card
+        Take a photo of the {cardName} and compare it with the official picture. For the best result: lay the card
         flat on a plain surface, shoot from straight above in daylight with no flash, then <strong>crop the photo to
-        the card&apos;s edges</strong> before choosing it here. Your photo never leaves your device.
+        the card&apos;s edges</strong> before choosing it here. The photo never leaves this device.
       </p>
 
       <label className="upload">
         <input type="file" accept="image/*" onChange={onFile} />
-        <span>{photoUrl ? 'Choose a different photo' : 'Choose a photo of your card'}</span>
+        <span>{photoUrl ? 'Choose a different photo' : 'Take or choose a photo of the card'}</span>
       </label>
 
       {error && <p className="notice error">{error}</p>}
@@ -66,8 +68,8 @@ export default function PhotoCheck({ officialImage, cardName }) {
       {photoUrl && (
         <div className="compare">
           <figure>
-            <img src={photoUrl} alt="Your card" />
-            <figcaption>Your photo</figcaption>
+            <img src={photoUrl} alt="Photo of the card being checked" />
+            <figcaption>This card</figcaption>
           </figure>
           <figure>
             <img src={`${officialImage}/high.webp`} alt={`Official ${cardName}`} />

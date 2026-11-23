@@ -1,9 +1,9 @@
-// Step 2: get one card's details and its prices converted to rupees.
-// The browser calls /api/card/swsh3-136 and gets back everything the card page needs.
+// Get one card's details and its prices in rupees, edition by edition.
+// The browser calls /api/card/base1-4 and gets back everything the card page needs.
 import { NextResponse } from 'next/server';
 import { TCGDEX_API } from '../../../../lib/tcgdex';
 import { getInrRates } from '../../../../lib/rates';
-import { convertCardmarket, convertTcgplayer } from '../../../../lib/pricing';
+import { buildVariants } from '../../../../lib/pricing';
 
 export async function GET(request, { params }) {
   const { id } = await params;
@@ -26,8 +26,6 @@ export async function GET(request, { params }) {
   }
 
   const rates = await getInrRates();
-  const pricing = card.pricing || {};
-  const searchName = encodeURIComponent(card.name || '');
 
   return NextResponse.json({
     card: {
@@ -35,17 +33,15 @@ export async function GET(request, { params }) {
       name: card.name,
       localId: card.localId,
       rarity: card.rarity || null,
+      setId: card.set?.id || null,
       setName: card.set?.name || null,
       setTotal: card.set?.cardCount?.official || null,
       illustrator: card.illustrator || null,
       image: card.image || null,
+      hp: card.hp || null,
+      category: card.category || null,
     },
     rates,
-    tcgplayer: convertTcgplayer(pricing.tcgplayer, rates.usdToInr),
-    cardmarket: convertCardmarket(pricing.cardmarket, rates.eurToInr),
-    links: {
-      tcgplayer: `https://www.tcgplayer.com/search/pokemon/product?q=${searchName}`,
-      cardmarket: `https://www.cardmarket.com/en/Pokemon/Products/Search?searchString=${searchName}`,
-    },
+    variants: buildVariants(card, rates),
   });
 }
